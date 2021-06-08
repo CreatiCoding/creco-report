@@ -1,10 +1,19 @@
 name: Lighthouse CI
 on: push
 jobs:
-  lighthouse:
+  test1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          apt update
+          apt-get install -y libcurl4-openssl-dev
+          apt-get install -y curl chromium-browser
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v7
         with:
@@ -13,3 +22,9 @@ jobs:
           budgetPath: ./budget.json # test performance budgets
           uploadArtifacts: true # save results as an action artifacts
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+      - name: shell test
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '\
+            {"text":"${{steps.LHCIAction.outputs.links}}"} \
+          ' https://hooks.slack.com/services/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
+        shell: bash
