@@ -1,0 +1,17 @@
+name: Report Light house
+on: push
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Lighthouse support.toss.im
+      uses: jakejarvis/lighthouse-action@master
+      with:
+        url: 'https://support.toss.im/'
+    - name: Upload results as an artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: report
+        path: './report'
+
